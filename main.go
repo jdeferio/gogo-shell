@@ -16,11 +16,15 @@ func main() {
 		reader := bufio.NewReader(os.Stdin)
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
-		if input == "exit" {
+		parts := strings.Split(input, " ")
+		commandName := parts[0]
+		args := parts[1:]
+
+		if string(commandName) == "exit" {
 			break
 		}
 
-		cmd := exec.Command(input)
+		cmd := exec.Command(commandName, args...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 
