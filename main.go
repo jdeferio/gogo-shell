@@ -11,17 +11,17 @@ import (
 
 func main() {
 	for {
-		// 	//start the prompt for gogo-shell
+		// start the prompt for gogo-shell
 		fmt.Print("ggsh> ")
 
-		commandName, args := collectInput()
-		if commandName == "exit" {
+		command, args := collectInput()
+		if command == "exit" {
 			os.Exit(0)
-		} else if commandName == "" {
+		} else if command == "" {
 			continue
 		}
 
-		cmd := generateCmd(commandName, args)
+		cmd := generateCmd(command, args)
 
 		err := cmd.Run()
 		if err != nil {
@@ -30,17 +30,21 @@ func main() {
 	}
 }
 
-func collectInput() (commandName string, args []string) {
+func collectInput() (command string, args []string) {
 	reader := bufio.NewReader(os.Stdin)
 	input, _ := reader.ReadString('\n')
 	input = strings.TrimSpace(input)
-	parts := strings.Split(input, " ")
+	parts := strings.Fields(input)
 
-	return parts[0], parts[1:]
+	if len(parts) >= 1 {
+		return parts[0], parts[1:]
+	}
+
+	return "", []string{}
 }
 
-func generateCmd(commandName string, args []string) (cmd *exec.Cmd) {
-	cmd = exec.Command(commandName, args...)
+func generateCmd(command string, args []string) (cmd *exec.Cmd) {
+	cmd = exec.Command(command, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
