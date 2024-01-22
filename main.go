@@ -15,9 +15,10 @@ func main() {
 		fmt.Print("ggsh> ")
 
 		command, args := collectInput()
-		if command == "exit" {
+		switch command {
+		case "exit":
 			os.Exit(0)
-		} else if command == "" {
+		case "":
 			continue
 		}
 
