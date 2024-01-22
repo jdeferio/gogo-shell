@@ -3,49 +3,46 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
 )
 
 func main() {
-	for 0 < 1 {
+	for {
 		// 	//start the prompt for gogo-shell
 		fmt.Print("ggsh> ")
 
-		reader := bufio.NewReader(os.Stdin)
-		input, _ := reader.ReadString('\n')
-		input = strings.TrimSpace(input)
-		parts := strings.Split(input, " ")
-		commandName := parts[0]
-		args := parts[1:]
-
-		if string(commandName) == "exit" {
-			break
+		commandName, args := collectInput()
+		if commandName == "exit" {
+			os.Exit(0)
+		} else if commandName == "" {
+			continue
 		}
 
-		cmd := exec.Command(commandName, args...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
+		cmd := generateCmd(commandName, args)
 
-		cmd.Run()
+		err := cmd.Run()
+		if err != nil {
+			log.Printf("Command finished with error: %v", err)
+		}
 	}
 }
 
-// func execute_cmd(input string) {
-// 	cmd := exec.Command(input)
-// 	cmd.Stdout = os.Stdout
-// 	cmd.Stderr = os.Stderr
+func collectInput() (commandName string, args []string) {
+	reader := bufio.NewReader(os.Stdin)
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSpace(input)
+	parts := strings.Split(input, " ")
 
-// 	cmd.Run()
-// }
+	return parts[0], parts[1:]
+}
 
-// func collect_input() {
-// 	//start the prompt for gogo-shell
-// 	fmt.Print("ggsh> ")
+func generateCmd(commandName string, args []string) (cmd *exec.Cmd) {
+	cmd = exec.Command(commandName, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
-// 	reader := bufio.NewReader(os.Stdin)
-// 	input, _ := reader.ReadString('\n')
-// 	input = strings.TrimSpace(input)
-// 	return input
-// }
+	return cmd
+}
