@@ -11,6 +11,7 @@ help:
 
 lint:
 	$(info lint)
+	# brew install golangci-lint
 	golangci-lint run 
 
 build: clean lint

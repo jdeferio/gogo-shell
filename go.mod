@@ -1,3 +1,3 @@
 module goggsh
 
-go 1.20.2
+go 1.21.6

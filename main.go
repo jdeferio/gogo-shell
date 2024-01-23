@@ -20,6 +20,7 @@ func main() {
 			os.Exit(0)
 		case "":
 			continue
+		case "cd":
 		}
 
 		cmd := generateCmd(command, args)
