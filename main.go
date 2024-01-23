@@ -21,13 +21,16 @@ func main() {
 		case "":
 			continue
 		case "cd":
-		}
+			cd(args)
+		case "pwd":
+			pwd()
+		default:
+			cmd := generateCmd(command, args)
 
-		cmd := generateCmd(command, args)
-
-		err := cmd.Run()
-		if err != nil {
-			log.Printf("Command finished with error: %v", err)
+			err := cmd.Run()
+			if err != nil {
+				log.Printf("Command finished with error: %v", err)
+			}
 		}
 	}
 }
@@ -51,4 +54,25 @@ func generateCmd(command string, args []string) (cmd *exec.Cmd) {
 	cmd.Stderr = os.Stderr
 
 	return cmd
+}
+
+func cd(args []string) {
+	var path string
+	var err error
+
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path, _ = os.UserHomeDir()
+	}
+
+	err = os.Chdir(path)
+	if err != nil {
+		log.Printf("%v\n", err)
+	}
+}
+
+func pwd() {
+	dir, _ := os.Getwd()
+	fmt.Println(dir)
 }
