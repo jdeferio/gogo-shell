@@ -14,7 +14,10 @@ func main() {
 		// start the prompt for gogo-shell
 		fmt.Print("ggsh> ")
 
-		command, args := collectInput()
+		reader := bufio.NewReader(os.Stdin)
+		input, _ := reader.ReadString('\n')
+
+		command, args := parseInput(input)
 		switch command {
 		case "exit":
 			os.Exit(0)
@@ -35,9 +38,7 @@ func main() {
 	}
 }
 
-func collectInput() (command string, args []string) {
-	reader := bufio.NewReader(os.Stdin)
-	input, _ := reader.ReadString('\n')
+func parseInput(input string) (command string, args []string) {
 	input = strings.TrimSpace(input)
 	parts := strings.Fields(input)
 
