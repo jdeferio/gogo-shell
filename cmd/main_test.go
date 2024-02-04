@@ -19,7 +19,7 @@ func TestCollectInput(t *testing.T) {
 	for _, tt := range tests {
 		testname := fmt.Sprintf("parseInput(%s)", tt.input)
 		t.Run(testname, func(t *testing.T) {
-			gotCmd, gotArgs := parseInput(tt.input)
+			gotCmd, gotArgs := ParseInput(tt.input)
 			if (gotCmd != tt.wantCmd) && (!reflect.DeepEqual(gotArgs, tt.wantArgs)) {
 				t.Errorf("parseInput(%s) = %s, %s; want %s, %s", tt.input, gotCmd, gotArgs, tt.wantCmd, tt.wantArgs)
 			}

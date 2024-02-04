@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-BUILD_PATH := cmd/gogo_shell/gogo_shell
+BUILD_PATH := cmd/gogo_shell
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -13,17 +13,17 @@ help:
 
 all: test
 
-deps: 
-	@which dep 2>/dev/null || go get -u github.com/golang/dep/cmd/dep
-	@dep ensure -v
+# deps: 
+# 	@which dep 2>/dev/null || go get -u github.com/golang/dep/cmd/dep
+# 	@dep ensure -v
 
 vet:
 	@go list ./... | grep -v vendor | xargs go vet
 
-build: clean lint deps
+build: clean lint
 	$(info Running [$@])
 	$(info Environment [$*])
-	@go build -o ${BUILD_PATH} cmd/gogo_shell/main.go
+	@go build -o ${BUILD_PATH} ./cmd/main.go
 
 lint:
 	$(info lint)
@@ -32,7 +32,7 @@ lint:
 
 format: lint
 	$(info formatting)
-	go fmt
+	go fmt cmd/
 
 clean:
 	$(info cleaning)
@@ -41,9 +41,9 @@ clean:
 
 test: build
 	$(info test)
-	@go test -v ./...
+	@go test -v ./cmd/
 
 run:
-	@ go run ./cmd/gogo_shell
+	@ go run ./cmd/
 
-.PHONY: run test clean format lint build vet deps all
+.PHONY: run test clean format lint build vet all

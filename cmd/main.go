@@ -17,7 +17,7 @@ func main() {
 		reader := bufio.NewReader(os.Stdin)
 		input, _ := reader.ReadString('\n')
 
-		command, args := parseInput(input)
+		command, args := ParseInput(input)
 		switch command {
 		case "exit":
 			os.Exit(0)
@@ -38,7 +38,7 @@ func main() {
 	}
 }
 
-func parseInput(input string) (command string, args []string) {
+func ParseInput(input string) (command string, args []string) {
 	input = strings.TrimSpace(input)
 	parts := strings.Fields(input)
 
@@ -59,6 +59,7 @@ func generateCmd(command string, args []string) (cmd *exec.Cmd) {
 
 func cd(args []string) {
 	var path string
+
 	var err error
 
 	if len(args) > 0 {
