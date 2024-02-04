@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestCollectInput(t *testing.T) {
+func TestParseInput(t *testing.T) {
 	tests := []struct {
 		input    string
 		wantCmd  string
@@ -17,11 +17,11 @@ func TestCollectInput(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		testname := fmt.Sprintf("parseInput(%s)", tt.input)
+		testname := fmt.Sprintf("ParseInput(%s)", tt.input)
 		t.Run(testname, func(t *testing.T) {
 			gotCmd, gotArgs := ParseInput(tt.input)
 			if (gotCmd != tt.wantCmd) && (!reflect.DeepEqual(gotArgs, tt.wantArgs)) {
-				t.Errorf("parseInput(%s) = %s, %s; want %s, %s", tt.input, gotCmd, gotArgs, tt.wantCmd, tt.wantArgs)
+				t.Errorf("ParseInput(%s) = %s, %s; want %s, %s", tt.input, gotCmd, gotArgs, tt.wantCmd, tt.wantArgs)
 			}
 		})
 	}
