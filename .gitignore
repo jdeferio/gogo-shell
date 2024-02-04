@@ -19,7 +19,7 @@ vendor/
 
 # Binaries compiled by Go
 build/
-cmd/gogo_shell/gogo_shell
+cmd/gogo_shell
 
 # Go workspace file
 go.work
