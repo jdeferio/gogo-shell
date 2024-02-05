@@ -13,16 +13,11 @@ help:
 
 all: test
 
-# deps: 
-# 	@which dep 2>/dev/null || go get -u github.com/golang/dep/cmd/dep
-# 	@dep ensure -v
-
 vet:
-	@go list ./... | grep -v vendor | xargs go vet
+	@go list ./cmd/ | grep -v vendor | xargs go vet
 
 build: clean lint
-	$(info Running [$@])
-	$(info Environment [$*])
+	$(info building)
 	@go build -o ${BUILD_PATH} ./cmd/main.go
 
 lint:
@@ -41,9 +36,9 @@ clean:
 
 test: build
 	$(info test)
-	@go test -v ./cmd/
+	@go test -v ./cmd/ -coverprofile=coverage.out
 
 run:
-	@ go run ./cmd/
+	@go run ./cmd/
 
 .PHONY: run test clean format lint build vet all
