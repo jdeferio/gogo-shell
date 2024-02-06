@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -16,26 +17,42 @@ func main() {
 
 		reader := bufio.NewReader(os.Stdin)
 		input, _ := reader.ReadString('\n')
+		inputSplit := SplitPipes(input)
 
-		command, args := ParseInput(input)
-		switch command {
-		case "exit":
-			os.Exit(0)
-		case "":
-			continue
-		case "cd":
-			cd(args)
-		case "pwd":
-			pwd()
-		default:
-			cmd := generateCmd(command, args)
+		var cmds []*exec.Cmd
+		var output io.ReadCloser
 
-			err := cmd.Run()
-			if err != nil {
-				log.Printf("Command finished with error: %v", err)
+		for _, rawInput := range inputSplit {
+			command, args := ParseInput(rawInput)
+
+			switch command {
+			case "exit":
+				os.Exit(0)
+			case "":
+				continue
+			case "cd":
+				cd(args)
+			case "pwd":
+				pr, pw := io.Pipe()
+				go pwd(pw)
+			default:
+				cmd := generateCmd(command, args)
+
+				err := cmd.Run()
+				if err != nil {
+					log.Printf("Command finished with error: %v", err)
+				}
 			}
+
 		}
+
 	}
+}
+
+func SplitPipes(input string) (cmds []string) {
+	cmds = strings.Split(input, "|")
+
+	return cmds
 }
 
 func ParseInput(input string) (command string, args []string) {
@@ -74,7 +91,11 @@ func cd(args []string) {
 	}
 }
 
-func pwd() {
-	dir, _ := os.Getwd()
-	fmt.Println(dir)
+func pwd(w *io.PipeWriter) {
+	defer w.Close()
+	dir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(w, dir)
 }
